@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@500&display=swap');
+
+.navbar-brand {
+    font-size: 30px;
+    font-family: Maven Pro;
+}
+
+.sorting{
+    font-family: 'Overpass';
+    padding-left: 20px;
+}
+
+.sidebar {
+    position: absolute;
+    width: 17%;
+    height: 40%;
+    margin-top: 3.2rem;
+    font-size: 500;
+    border-radius: 0.25rem;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    flex-direction: row;
+    gap: 10px;
+    padding: 50px;
+    padding-left: 18rem;
+    align-items: flex-start;
+    
+}
+
+.card-img-top {
+    height: 300px;
+}
+
+.checkoutHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    height: 60px;
+    background-color: lightslategray;
+}
+
+.checkoutText {
+    -webkit-text-stroke: 1px white;
+    font-size: 50px;
+}
+
+table, td {
+    border: 0px solid black;
+    padding: 5px;
+}
+
+.checkoutMain {
+    display: grid;
+    grid-template-columns: 5fr 5fr;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    
+}
+
+.style {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-evenly;
+    gap: 50px;
+    margin-right: 50px;
+}
+
+.checkoutInfo {
+    position: relative;
+    padding-top: 30px;
+    padding-left: 30px;
+    margin-left: 50px;
+    background-color: lightgrey;
+    height: 150pt;
+    width: 60%;
+    align-items: center;
+}
+
+ .btn-dark {
+    float: right;
+    margin-right: 20px;
+}
+
+.btn-success {
+    width: 123%;
+}
+
+.form-control {
+    width: 130%;
+}

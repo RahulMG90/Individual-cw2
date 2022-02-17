@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Subjects</title>
+  <!-- Importing the Vue.js as a javascript library -->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
+
+  <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.min.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="subjects.js"></script>
+
+</head>
+
+<body>
+
+  <!-- Div to mount app-->
+  <div id="app">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand"><strong>Activity Clubs</strong></a>
+
+        <button class="btn btn-light" v-on:click="showCheckout" v-if="checkCart">
+          {{ cartItemCount }}
+          <!-- Displaying the number of items added in cart -->
+          <span class="fas fa-cart-plus"></span> Checkout
+        </button>
+        <button disabled="disabled" class="btn btn-light" v-else>
+          <!-- Button disabled unless 'Add to cart' button is pressed -->
+          <span class="fas fa-cart-plus"></span> Checkout
+        </button>
+
+      </div>
+    </nav>
+
+    <main>
+      <div v-if="showSubjects">
+        <!-- Showing the subjects -->
+
+        <!-- Side Bar-->
+        <div class="sidebar">
+          <h2 class="sorting">Sort By</h2>
+          <ul style="list-style-type: none;">
+            <!-- Sorting options in radio input -->
+            <li><input type="radio" name="sorting" v-on:click="sortedArray('title')"> Subject</li>
+            <li><input type="radio" name="sorting" v-on:click="sortedArray('location')"> Location</li>
+            <li><input type="radio" name="sorting" v-on:click="sortedArray('price')"> Price</li>
+          </ul>
+
+          <!-------------- Please choose an option from 'Sort Order' and select any option from 'Sort By' -------------->
+
+          <hr style="width: 70%; margin: auto; height: 2%; border-radius: 2px;">
+          <br>
+
+          <h2 class="sorting">Sort Order</h2>
+          <ul style="list-style-type: none;">
+            <!-- Sorting the order by ascending and descending-->
+            <li><input type="radio" name="order" id="ascending"> Lowest to Highest</li>
+            <li><input type="radio" name="order" id="descending"> Highest to Lowest</li>
+          </ul>
+        </div>
+
+        <!-- Main page container -->
+        <div class="main-container">
+
+          <!-- Subject container -->
+          <div class="card" style="width: 18rem;" v-for="subject in subjects">
+            <img v-bind:src="subject.img" class="card-img-top">
+            <div class="card-body">
+              <h4 class="card-title">{{subject.title}}</h5>
+                <p class="card-text"><b>Location:</b> {{subject.location}}</p>
+                <p class="card-text"><b>Price:</b> ${{subject.price}}</p>
+                <p class="card-text"><b>Availibility:</b> {{subject.availableSlots - cartCount(subject.id)}}</p>
+
+                <button v-if="canAddToCart(subject)" class="btn btn-primary" v-on:click='addToCart(subject)'>Add to
+                  cart</button>
+                <button disabled='disabled' class="btn btn-primary" v-else>Add to cart</button>
+                <!-- Disable the button when the slots are 0 -->
+
+                <span v-if='subject.availableSlots === cartCount(subject.id)'> All out!</span>
+                <span v-else-if="subject.availableSlots - cartCount(subject.id) < 5"> Only {{subject.availableSlots -
+                  cartCount(subject.id)}} left!</span>
+                <span v-else>Buy now!</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- Checkout page-->
+      <div class="checkout" v-else>
+        <!-- if the checkout button is pressed, the page changes using v-else -->
+        <div class="checkoutHeader">
+          <h2 style="font-family: 'Roboto Condensed'; padding-top: 10px; padding-left: 10px;" class="checkoutText">
+            Checkout</h2>
+          <button class="btn btn-dark" v-on:click="showCheckout">Back to home</button>
+          <!-- switches the page back to home -->
+        </div>
+
+        <div class="checkoutMain">
+          <!-- main container including forms and cart items -->
+
+          <div class="checkoutInfo">
+            <form id="customerForm">
+              <table>
+                <tr>
+                  <td>
+                    <p><b>Name:</b></p>
+                  </td>
+                  <td><input type="email" class="form-control" id="formName"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <p><b>Phone:</b></p>
+                  </td>
+                  <td><input type="email" class="form-control" id="formPhone"></td>
+                </tr>
+                <tr>
+                  <td colspan=2><button type="button" class="btn btn-success"
+                      v-on:click="formValidity">Checkout</button></td>
+                </tr>
+              </table>
+            </form>
+          </div>
+
+          <div class=style id="addedItems">
+
+            <div class="card" style="width: 18rem;" v-for="bag in bag">
+              <img v-bind:src="bag.img" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Subject: {{bag.title}}</h5>
+                <p class="card-text">Price: ${{bag.price}}</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+    </main>
+  </div>
+
+  <br>
+  </div>
+
+
+  <script type="text/javascript">
+
+    let app = new Vue({ // root Vue instance
+      el: '#app', // linking to the <div> tag in HTML with ID
+      data: {
+        subjects: subjects, // JSON objects from an external JavaScript file
+        showSubjects: true, // property implemented to switch pages
+        cart: [], // array to store subject id
+        bag: [], //array to store the full JSON object of a subject
+      },
+
+
+      methods: {
+        // showCheckout function checks the value of showSubjects and its condition
+        showCheckout() {
+          this.showSubjects = this.showSubjects ? false : true;
+        },
+
+        // function to push subjects in the cart
+        addToCart: function (subject) {
+          this.cart.push(subject.id);
+          this.bag.push(subject);
+        },
+
+        // function checks availaible slots against cartCount
+        canAddToCart(subject) {
+          return subject.availableSlots > this.cartCount(subject.id);
+        },
+
+        // this function returns the number of subjects in the cart
+        cartCount(id) {
+          let count = 0;
+          for (let i = 0; i < this.cart.length; i++) {
+            if (this.cart[i] === id) {
+              count++;
+            }
+          }
+          return count;
+        },
+
+        // function is to sort subjects according to the options with ascending and descending options
+        sortedArray(variable) {
+          // ascending
+          if (document.getElementById('ascending').checked) {
+            this.subjects.sort((a, b) => a[variable] < b[variable] ? -1 : 1);
+            // descending
+          } else if (document.getElementById('descending').checked) {
+            this.subjects.sort((a, b) => a[variable] > b[variable] ? -1 : 1);
+          } else {
+            return
+          }
+        },
+
+        // validation function to check the user's input
+        formValidity() {
+
+          let regName = /^[a-zA-Z]+$/; // regular expression for alphabets
+          let regPhone = /^[0-9]+$/; //regular expression for numbers
+          let name = document.getElementById('formName').value;
+          let phone = document.getElementById('formPhone').value;
+
+          if (!regName.test(name)) {
+            alert('Please enter your name (in letters)');
+            document.getElementById('name').focus();
+            return false;
+          }
+
+          else if (!regPhone.test(phone)) {
+            alert('Please enter your phone number (in numbers)');
+            document.getElementById('phone').focus();
+            return false;
+
+          }
+
+          else {
+            alert('Your order has been placed successfully!');
+            document.getElementById('customerForm').reset(); // function to clear the input fields
+            this.cart = []; // emptying the cart array after checking out
+            this.bag = []; // clears the items from the cart
+          }
+        },
+      },
+
+      // computed property for calculating the value depending on the state of the app
+      computed: {
+        // function to return the value
+        cartItemCount: function () {
+          return this.cart.length;
+        },
+
+        // to check if cart is empty or not
+        checkCart() {
+          return this.cartItemCount > 0;
+        }
+      },
+    })
+
+  </script>
+</body>
+
+</html>
