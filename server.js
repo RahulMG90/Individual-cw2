@@ -1,6 +1,7 @@
 // Import dependencies modules:
 const express = require('express')
-// const bodyParser = require('body-parser')
+const path = require("path");
+const fs = require("fs");
 
 
 // Create an Express.js instance:
@@ -28,6 +29,24 @@ let db;
 MongoClient.connect('mongodb+srv://RahulG:Rahul2000@cluster0.fdk6n.mongodb.net/test', (err, client) => {
     db = client.db('webstore')
 })
+
+//static file middleware
+app.use(function(req, res, next) {
+    var filePath = path.join(__dirname, "images", req.url);
+    fs.stat(filePath, function(err, fileInfo) {
+        if (err) {
+            next();
+            return;
+        }
+        if (fileInfo.isFile()) {
+            res.sendFile(filePath);
+        }
+        else {
+            next();
+        }
+    });
+});
+
 
 // dispaly a message for root path to show that API is working
 app.get('/', (req, res, next) => {
