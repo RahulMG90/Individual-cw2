@@ -15,13 +15,19 @@ app.use ((req,res,next) => {
     next();
 })
 
+//logger middleware
+app.use(function(req, res, next) {
+    console.log("Request IP: " + req.url);
+    console.log("Request Date: " + new Date());
+    next();
+});
+
 // connect to MongoDB
 const MongoClient = require('mongodb').MongoClient;
 let db;
 MongoClient.connect('mongodb+srv://RahulG:Rahul2000@cluster0.fdk6n.mongodb.net/test', (err, client) => {
     db = client.db('webstore')
 })
-
 
 // dispaly a message for root path to show that API is working
 app.get('/', (req, res, next) => {
