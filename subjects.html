@@ -8,6 +8,8 @@
 
   <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
@@ -15,7 +17,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
-  <script src="subjects.js"></script>
 
 </head>
 
@@ -241,11 +242,34 @@
             alert('Please enter your phone number (in numbers)');
             document.getElementById('phone').focus();
             return false;
-
           }
-
           else {
             alert('Your order has been placed successfully!');
+
+            let orderArray = [];
+            orderArray.push(this.bag);
+            
+            const newOrder = { "customerName": name, "customerPhone": phone, "orderedItems": this.bag };
+            console.log (newOrder);
+
+
+// set the url to your server and route
+fetch('http://localhost:3000/collection/orders', {
+    method: 'POST', // set the HTTP method as 'POST'
+    headers: {
+        'Content-Type': 'application/json', // set the data type as JSON
+    },
+    body: JSON.stringify(newOrder), // need to stringify the JSON object
+})
+    .then(response => response.json())
+    .then(responseJSON => {
+        document.getElementById('response').innerText = JSON.stringify(responseJSON);
+    })
+    .catch((error) => {
+        // document.getElementById('error').innerText = error;
+    });
+
+
             document.getElementById('customerForm').reset(); // function to clear the input fields
             this.cart = []; // emptying the cart array after checking out
             this.bag = []; // clears the items from the cart
