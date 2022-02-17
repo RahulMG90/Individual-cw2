@@ -161,12 +161,26 @@
     let app = new Vue({ // root Vue instance
       el: '#app', // linking to the <div> tag in HTML with ID
       data: {
-        subjects: subjects, // JSON objects from an external JavaScript file
+        subjects: [], // JSON objects from an external JavaScript file
         showSubjects: true, // property implemented to switch pages
         cart: [], // array to store subject id
         bag: [], //array to store the full JSON object of a subject
       },
 
+      //this function runs when creating Vue instance 
+      created: function () {
+        console.log('Requesting data from server..')
+
+        fetch('http://localhost:3000/collection/lessons').then(
+          function (response) {
+            response.json().then(
+              function (json) {
+                app.subjects = json;
+                console.log(json);
+              });
+          }
+        )
+      },
 
       methods: {
         // showCheckout function checks the value of showSubjects and its condition
