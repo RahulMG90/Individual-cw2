@@ -172,7 +172,7 @@
       created: function () {
         console.log('Requesting data from server..')
 
-        fetch('https://cst3145-cw2-2022.herokuapp.com/collection/lessons').then(
+        fetch('https://cst3145-individual-cw2.herokuapp.com/collection/lessons').then(
           function (response) {
             response.json().then(
               function (json) {
@@ -254,7 +254,7 @@
 
 
             // set the url to your server and route
-            fetch('https://cst3145-cw2-2022.herokuapp.com/collection/orders', {
+            fetch('https://cst3145-individual-cw2.herokuapp.com/collection/orders', {
               method: 'POST', // set the HTTP method as 'POST'
               headers: {
                 'Content-Type': 'application/json', // set the data type as JSON
@@ -281,7 +281,7 @@
             document.getElementById('customerForm').reset(); // function to clear the input fields
             this.cart = []; // emptying the cart array after checking out
             this.bag = []; // clears the items from the cart
-            fetch('https://cst3145-cw2-2022.herokuapp.com/collection/lessons').then(
+            fetch('https://cst3145-individual-cw2.herokuapp.com/collection/lessons').then(
               function (response) {
                 response.json().then(
                   function (json) {
@@ -295,7 +295,7 @@
         },
         updateDetails(id, slots) {
           const attribute = 'availableSlots';
-          fetch(`https://cst3145-cw2-2022.herokuapp.com/collection/lessons/${id}/reduce/${attribute}/${slots}`, {
+          fetch(`https://cst3145-individual-cw2.herokuapp.com/collection/lessons/${id}/reduce/${attribute}/${slots}`, {
             method: 'PUT', // set the HTTP method as 'PUT'
             headers: {
               'Content-Type': 'application/json',
