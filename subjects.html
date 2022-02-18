@@ -172,7 +172,7 @@
       created: function () {
         console.log('Requesting data from server..')
 
-        fetch('http://localhost:3000/collection/lessons').then(
+        fetch('https://cst3145-cw2-2022.herokuapp.com/collection/lessons').then(
           function (response) {
             response.json().then(
               function (json) {
@@ -254,7 +254,7 @@
 
 
             // set the url to your server and route
-            fetch('http://localhost:3000/collection/orders', {
+            fetch('https://cst3145-cw2-2022.herokuapp.com/collection/orders', {
               method: 'POST', // set the HTTP method as 'POST'
               headers: {
                 'Content-Type': 'application/json', // set the data type as JSON
@@ -274,29 +274,6 @@
             const objectID = this.bag[0]._id;
             const value = this.cartCount(this.bag[0]._id);
 
-            //console.log(attributeName, objectID, value);
-
-            // set the url to your server and route
-            /*fetch(`http://localhost:3000/collection/lessons/${objectID}/reduce/${attributeName}/${value}`, {
-                method: 'PUT', // set the HTTP method as 'PUT'
-                headers: {
-                    'Content-Type': 'application/json',
-                    'mode': 'no-cors'
-                }
-                // body: JSON.stringify(newOrder), 
-            })
-                .then(response => response.json())
-                .then(responseJSON => {
-                    //document.getElementById('response').innerText = JSON.stringify(responseJSON);
-                    console.log('Success:', responseJSON);
-                });*/
-
-
-
-            /*.catch((error) => {
-                // document.getElementById('error').innerText = error;
-            });*/
-
             for (let i = 0; i < this.cart.length; i++) {
               this.updateDetails(this.bag[i]._id, 1);
             }
@@ -304,7 +281,7 @@
             document.getElementById('customerForm').reset(); // function to clear the input fields
             this.cart = []; // emptying the cart array after checking out
             this.bag = []; // clears the items from the cart
-            fetch('http://localhost:3000/collection/lessons').then(
+            fetch('https://cst3145-cw2-2022.herokuapp.com/collection/lessons').then(
               function (response) {
                 response.json().then(
                   function (json) {
@@ -318,17 +295,15 @@
         },
         updateDetails(id, slots) {
           const attribute = 'availableSlots';
-          fetch(`http://localhost:3000/collection/lessons/${id}/reduce/${attribute}/${slots}`, {
+          fetch(`https://cst3145-cw2-2022.herokuapp.com/collection/lessons/${id}/reduce/${attribute}/${slots}`, {
             method: 'PUT', // set the HTTP method as 'PUT'
             headers: {
               'Content-Type': 'application/json',
               'mode': 'no-cors'
             }
-            // body: JSON.stringify(newOrder), 
           })
             .then(response => response.json())
             .then(responseJSON => {
-              //document.getElementById('response').innerText = JSON.stringify(responseJSON);
               console.log('Success:', responseJSON);
             });
 

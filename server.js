@@ -2,7 +2,7 @@
 const express = require('express')
 const path = require("path");
 const fs = require("fs");
-
+const cors = require('cors');
 
 // Create an Express.js instance:
 const app = express()
@@ -14,7 +14,9 @@ app.use ((req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Headers","*");
     next();
-})
+});
+
+app.use(cors());
 
 //logger middleware
 app.use(function(req, res, next) {
@@ -29,24 +31,6 @@ let db;
 MongoClient.connect('mongodb+srv://RahulG:Rahul2000@cluster0.fdk6n.mongodb.net/test', (err, client) => {
     db = client.db('webstore')
 })
-
-//static file middleware
-app.use(function(req, res, next) {
-    var filePath = path.join(__dirname, "images", req.url);
-    fs.stat(filePath, function(err, fileInfo) {
-        if (err) {
-            next();
-            return;
-        }
-        if (fileInfo.isFile()) {
-            res.sendFile(filePath);
-        }
-        else {
-            next();
-        }
-    });
-});
-
 
 // dispaly a message for root path to show that API is working
 app.get('/', (req, res, next) => {
@@ -115,11 +99,28 @@ app.put('/collection/:collectionName/:id/reduce/:name/:value', (req, res, next) 
         { "$inc": attr },
         { safe: true, multi: false },
         (e, result) => {
-            if(e || result.result.n !== 1) return next();
-            res.json({ message: 'success' });
+        if (e) return next(e)
+        res.send(result.modifiedCount === 1 ? {msg: 'success'} : {msg: 'error'})
+
         });
 });
 
+//static file middleware
+app.use(function(req, res, next) {
+    var filePath = path.join(__dirname, "images", req.url);
+    fs.stat(filePath, function(err, fileInfo) {
+        if (err) {
+            next();
+            return;
+        }
+        if (fileInfo.isFile()) {
+            res.sendFile(filePath);
+        }
+        else {
+            next();
+        }
+    });
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port,()=> {console.log('Express server is running at localhost:3000')
